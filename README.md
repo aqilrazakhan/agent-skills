@@ -17,24 +17,24 @@ by the [`skills` CLI](https://github.com/vercel-labs/skills) / [skills.sh](https
 
 ## Install
 
-Pin to a release tag. Don't track `main`, which is the same advice this
-repo's skill gives about everyone else's skills.
+Pin to a release tag (currently `v1.0.1`). Don't track `main`, which is the
+same advice this repo's skill gives about everyone else's skills.
 
 **Any agent (skills.sh CLI)**
 ```bash
-npx skills add aqilrazakhan/agent-skills --skill taa-skill-vetter
+npx skills add aqilrazakhan/agent-skills#v1.0.1 --skill taa-skill-vetter
 # Claude Code only, user-wide:
-npx skills add aqilrazakhan/agent-skills --skill taa-skill-vetter -a claude-code -g
+npx skills add aqilrazakhan/agent-skills#v1.0.1 --skill taa-skill-vetter -a claude-code -g
 ```
 
 **Claude Code plugin marketplace**
 ```bash
-claude plugin marketplace add aqilrazakhan/agent-skills
+claude plugin marketplace add aqilrazakhan/agent-skills@v1.0.1
 claude plugin install taa-skills@aqilrazakhan-agent-skills
 ```
 
 **Manual (recommended for regulated environments)**
-Download the tagged release, review it, then copy `skills/taa-skill-vetter/`
+Download the [v1.0.1 release](https://github.com/aqilrazakhan/agent-skills/releases/tag/v1.0.1), review it, then copy `skills/taa-skill-vetter/`
 into `~/.claude/skills/` or your project's `.claude/skills/`.
 
 **claude.ai**
