@@ -1,6 +1,6 @@
 {
   "name": "taa-skills",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Towards Agentic AI skills, including taa-skill-vetter: security-audit third-party agent skills before installing them",
   "author": {
     "name": "Aqil Khan",
