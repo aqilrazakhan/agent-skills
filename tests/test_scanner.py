@@ -1,7 +1,8 @@
 """Tests for taa-skill-vetter's scanner.
 
-Deliberately benign: no malicious sample content is stored in this repo.
-Detection of real attack payloads is tested privately before each release.
+Unit tests with benign samples. Attack-shape detection lives in
+test_hostile_fixtures.py, which builds inert hostile skills in temp
+directories at test time; no malicious sample is stored in this repo.
 
 Run: python3 -m unittest discover -s tests -v
 """
