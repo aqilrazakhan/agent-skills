@@ -196,7 +196,7 @@
       "category": "persistence",
       "severity": "critical",
       "why": "Writes to agent identity / memory / instruction files",
-      "pattern": "(>>?|write_text|writeFile|open\\([^\\n)]{0,80}['\\\"][aw]['\\\"])[^\\n]{0,120}(CLAUDE\\.md|AGENTS\\.md|MEMORY\\.md|SOUL\\.md|\\.cursorrules|copilot-instructions)"
+      "pattern": "(>>?|write_text|writeFile|open\\([^\\n)]{0,80}['\\\"][aw]['\\\"])[^\\n]{0,120}(CLAUDE\\.md|AGENTS\\.md|MEMORY\\.md|SOUL\\.md|\\.cursorrules|copilot-instructions)|\\b(append|add|write|save|put|insert|update|edit|modify|create|overwrite)\\b[^\\n]{0,100}(CLAUDE\\.md|AGENTS\\.md|MEMORY\\.md|SOUL\\.md|\\.cursorrules|copilot-instructions)"
     },
     {
       "id": "PER-02",
@@ -322,7 +322,7 @@
       "category": "destructive",
       "severity": "critical",
       "why": "Recursive delete of root or home",
-      "pattern": "rm\\s+-[a-z]*r[a-z]*f?[a-z]*\\s+(--no-preserve-root\\s+)?(/|~|\\$HOME)(\\s|/\\*|$)|shutil\\.rmtree\\(\\s*(os\\.path\\.expanduser\\(['\\\"]~|['\\\"]/['\\\"])"
+      "pattern": "rm\\s+-[a-z]*r[a-z]*f?[a-z]*\\s+(--no-preserve-root\\s+)?(/|~|\\$HOME)/?\\*?(\\s|$)|shutil\\.rmtree\\(\\s*(os\\.path\\.expanduser\\(['\\\"]~|['\\\"]/['\\\"])"
     },
     {
       "id": "DST-02",

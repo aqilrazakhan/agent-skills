@@ -118,8 +118,11 @@ def scan(skill_dir: Path) -> dict:
             p = Path(dirpath) / d
             rel = str(p.relative_to(root))
             if p.is_symlink():
-                findings.append(Finding("FS-01", "filesystem", "high", rel, 0,
-                                        f"symlink -> {os.readlink(p)}", "Symlinked directory"))
+                resolved = (p.parent / os.readlink(p)).resolve()
+                sev = "critical" if not str(resolved).startswith(str(root)) else "high"
+                findings.append(Finding("FS-01", "filesystem", sev, rel, 0,
+                                        f"symlink -> {os.readlink(p)}",
+                                        "Symlinked directory (outside skill dir = critical)"))
                 dirnames.remove(d)
             elif d == ".git":
                 dirnames.remove(d)
