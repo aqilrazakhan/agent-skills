@@ -1,0 +1,349 @@
+{
+  "_comment": "DETECTION SIGNATURES ONLY. These regexes describe malicious patterns so the scanner can find them in OTHER skills. Nothing in this file is executed; it is loaded as data by scripts/scan_skill.py.",
+  "version": "1.0.0",
+  "rules": [
+    {
+      "id": "RCE-01",
+      "category": "remote-exec",
+      "severity": "critical",
+      "why": "Download piped straight into a shell",
+      "pattern": "(curl|wget|iwr|invoke-webrequest)[^\\n|]{0,200}\\|\\s*(sudo\\s+)?(ba|z|da)?sh\\b"
+    },
+    {
+      "id": "RCE-02",
+      "category": "remote-exec",
+      "severity": "critical",
+      "why": "Download piped into an interpreter",
+      "pattern": "(curl|wget)[^\\n]{0,200}\\|\\s*(python3?|node|perl|ruby|php)\\b"
+    },
+    {
+      "id": "RCE-03",
+      "category": "remote-exec",
+      "severity": "critical",
+      "why": "Base64-decoded payload executed by shell",
+      "pattern": "base64\\s+(-d|--decode|-D)[^\\n]{0,80}\\|\\s*(ba|z)?sh"
+    },
+    {
+      "id": "RCE-04",
+      "category": "remote-exec",
+      "severity": "critical",
+      "why": "Encoded PowerShell command",
+      "pattern": "(powershell|pwsh)[^\\n]{0,60}-(e|enc|encodedcommand)\\s+[A-Za-z0-9+/=]{20,}"
+    },
+    {
+      "id": "RCE-05",
+      "category": "remote-exec",
+      "severity": "high",
+      "why": "Dynamic execution of decoded content",
+      "pattern": "\\b(eval|exec)\\s*\\(\\s*(base64|b64decode|atob|codecs\\.decode|bytes\\.fromhex|zlib\\.decompress|marshal\\.loads)"
+    },
+    {
+      "id": "RCE-06",
+      "category": "remote-exec",
+      "severity": "high",
+      "why": "Dynamic execution of fetched content",
+      "pattern": "\\b(eval|exec)\\s*\\(\\s*(requests\\.get|urllib|urlopen|fetch\\()"
+    },
+    {
+      "id": "RCE-07",
+      "category": "remote-exec",
+      "severity": "high",
+      "why": "JS dynamic code construction",
+      "pattern": "new\\s+Function\\s*\\(|\\beval\\s*\\(\\s*atob"
+    },
+    {
+      "id": "RCE-08",
+      "category": "remote-exec",
+      "severity": "medium",
+      "why": "subprocess with shell=True",
+      "pattern": "subprocess\\.(run|call|Popen|check_output)\\([^\\n)]{0,120}shell\\s*=\\s*True"
+    },
+    {
+      "id": "RCE-09",
+      "category": "remote-exec",
+      "severity": "medium",
+      "why": "Shell / process spawning",
+      "pattern": "\\bos\\.system\\s*\\(|child_process|\\bexecSync\\s*\\(|\\bspawnSync\\s*\\("
+    },
+    {
+      "id": "RSH-01",
+      "category": "backdoor",
+      "severity": "critical",
+      "why": "Bash /dev/tcp reverse shell",
+      "pattern": "/dev/tcp/\\d{1,3}(\\.\\d{1,3}){3}/\\d+|/dev/tcp/[a-z0-9.-]+/\\d+"
+    },
+    {
+      "id": "RSH-02",
+      "category": "backdoor",
+      "severity": "critical",
+      "why": "Netcat with command execution",
+      "pattern": "\\b(nc|ncat|netcat)\\b[^\\n]{0,60}\\s-(e|c)\\s"
+    },
+    {
+      "id": "RSH-03",
+      "category": "backdoor",
+      "severity": "critical",
+      "why": "Python reverse-shell primitives",
+      "pattern": "pty\\.spawn\\(|os\\.dup2\\([^\\n]{0,40}fileno"
+    },
+    {
+      "id": "RSH-04",
+      "category": "backdoor",
+      "severity": "high",
+      "why": "FIFO shell relay",
+      "pattern": "\\bmkfifo\\b[^\\n]{0,80}\\b(nc|sh)\\b"
+    },
+    {
+      "id": "CRD-01",
+      "category": "credential-access",
+      "severity": "high",
+      "why": "SSH key / config access",
+      "pattern": "(~|\\$HOME|%USERPROFILE%)/\\.ssh\\b|\\.ssh/(id_[a-z0-9]+|authorized_keys|known_hosts|config)\\b|\\bid_(rsa|ed25519|ecdsa)\\b"
+    },
+    {
+      "id": "CRD-02",
+      "category": "credential-access",
+      "severity": "high",
+      "why": "Cloud credential files",
+      "pattern": "\\.aws/(credentials|config)|\\.azure/|\\.config/gcloud|application_default_credentials|\\.kube/config|\\.docker/config\\.json"
+    },
+    {
+      "id": "CRD-03",
+      "category": "credential-access",
+      "severity": "high",
+      "why": "Package/registry/Git token files",
+      "pattern": "\\.npmrc|\\.pypirc|\\.netrc|\\.git-credentials|\\.config/gh/hosts\\.yml"
+    },
+    {
+      "id": "CRD-04",
+      "category": "credential-access",
+      "severity": "high",
+      "why": "Browser / OS keychain / crypto-wallet stores",
+      "pattern": "(Login Data|Cookies|Local State|logins\\.json|key[34]\\.db|Keychains?/|security\\s+find-(generic|internet)-password|wallet\\.dat|metamask|\\.electrum|exodus)"
+    },
+    {
+      "id": "CRD-05",
+      "category": "credential-access",
+      "severity": "high",
+      "why": "Bulk environment-variable harvesting",
+      "pattern": "\\b(printenv|env)\\s*(\\||>)|os\\.environ\\s*\\)|os\\.environ\\.items\\(\\)|JSON\\.stringify\\(\\s*process\\.env\\s*\\)|\\$\\{!\\*@\\}"
+    },
+    {
+      "id": "CRD-06",
+      "category": "credential-access",
+      "severity": "medium",
+      "why": "References a specific secret env var - confirm it is needed",
+      "pattern": "\\b(ANTHROPIC|OPENAI|GITHUB|GH|AWS_SECRET|AZURE|GOOGLE|SLACK|STRIPE|HF)_?[A-Z_]*(KEY|TOKEN|SECRET)\\b"
+    },
+    {
+      "id": "CRD-07",
+      "category": "credential-access",
+      "severity": "medium",
+      "why": "Reads .env files",
+      "pattern": "(^|[\\s'\\\"/])\\.env(\\.[a-z]+)?\\b"
+    },
+    {
+      "id": "EXF-01",
+      "category": "exfiltration",
+      "severity": "critical",
+      "why": "Known exfil / tunnelling endpoint",
+      "pattern": "(webhook\\.site|requestbin|pipedream\\.net|interact\\.sh|oast\\.(fun|pro|live)|burpcollaborator|canarytokens|ngrok(-free)?\\.(io|app)|trycloudflare\\.com|serveo\\.net|localtunnel)"
+    },
+    {
+      "id": "EXF-02",
+      "category": "exfiltration",
+      "severity": "high",
+      "why": "Chat webhook used as a data sink",
+      "pattern": "discord(app)?\\.com/api/webhooks|api\\.telegram\\.org/bot|hooks\\.slack\\.com/services"
+    },
+    {
+      "id": "EXF-03",
+      "category": "exfiltration",
+      "severity": "high",
+      "why": "Anonymous paste / file-drop service",
+      "pattern": "(pastebin\\.com|paste\\.ee|hastebin|transfer\\.sh|file\\.io|0x0\\.st|temp\\.sh)"
+    },
+    {
+      "id": "EXF-04",
+      "category": "exfiltration",
+      "severity": "medium",
+      "why": "curl uploading data",
+      "pattern": "curl\\b[^\\n]{0,200}(\\s-d\\s|--data|\\s-F\\s|--form|-T\\s|--upload-file)"
+    },
+    {
+      "id": "EXF-05",
+      "category": "exfiltration",
+      "severity": "medium",
+      "why": "Outbound POST/PUT - verify destination and payload",
+      "pattern": "requests\\.(post|put)\\(|axios\\.(post|put)\\(|fetch\\([^\\n)]{0,200}method\\s*:\\s*['\\\"](POST|PUT)"
+    },
+    {
+      "id": "EXF-06",
+      "category": "exfiltration",
+      "severity": "medium",
+      "why": "Hard-coded IP address URL",
+      "pattern": "https?://\\d{1,3}(\\.\\d{1,3}){3}(:\\d+)?"
+    },
+    {
+      "id": "EXF-07",
+      "category": "exfiltration",
+      "severity": "low",
+      "why": "Possible DNS-based exfiltration",
+      "pattern": "\\bdns(lookup)?\\b[^\\n]{0,40}\\$\\(|nslookup\\s+\\$\\("
+    },
+    {
+      "id": "PER-01",
+      "category": "persistence",
+      "severity": "critical",
+      "why": "Writes to agent identity / memory / instruction files",
+      "pattern": "(>>?|write_text|writeFile|open\\([^\\n)]{0,80}['\\\"][aw]['\\\"])[^\\n]{0,120}(CLAUDE\\.md|AGENTS\\.md|MEMORY\\.md|SOUL\\.md|\\.cursorrules|copilot-instructions)"
+    },
+    {
+      "id": "PER-02",
+      "category": "persistence",
+      "severity": "critical",
+      "why": "Touches agent settings, hooks or MCP config",
+      "pattern": "\\.claude/(settings(\\.local)?\\.json|hooks)|\\.mcp\\.json|claude_desktop_config\\.json|\\.cursor/mcp\\.json"
+    },
+    {
+      "id": "PER-03",
+      "category": "persistence",
+      "severity": "high",
+      "why": "Shell-profile, cron, launchd, systemd or registry persistence",
+      "pattern": "(>>?|tee\\s+-a)\\s*~?/?\\.(bashrc|zshrc|profile|bash_profile|zprofile)|crontab\\s+-|launchctl\\s+load|LaunchAgents|systemctl\\s+(enable|--user)|schtasks|HKCU\\\\\\\\Software\\\\\\\\Microsoft\\\\\\\\Windows\\\\\\\\CurrentVersion\\\\\\\\Run"
+    },
+    {
+      "id": "PER-04",
+      "category": "persistence",
+      "severity": "high",
+      "why": "Git hook / credential-helper tampering",
+      "pattern": "git\\s+config\\s+--global\\s+(core\\.hooksPath|credential\\.helper)|\\.git/hooks/"
+    },
+    {
+      "id": "PIJ-01",
+      "category": "prompt-injection",
+      "severity": "high",
+      "why": "Classic instruction-override phrasing",
+      "pattern": "ignore\\s+(all\\s+)?(previous|prior|above|earlier)\\s+(instructions|rules|directions)|disregard\\s+(the\\s+)?(system|previous)\\s+(prompt|instructions)"
+    },
+    {
+      "id": "PIJ-02",
+      "category": "prompt-injection",
+      "severity": "high",
+      "why": "Instructs agent to hide actions from the user",
+      "pattern": "(do\\s*not|don'?t|never)\\s+(tell|inform|mention\\s+(this\\s+)?to|show|notify|alert)\\s+(the\\s+)?(user|human|operator)"
+    },
+    {
+      "id": "PIJ-03",
+      "category": "prompt-injection",
+      "severity": "high",
+      "why": "Stealth-action wording",
+      "pattern": "\\b(silently|quietly|secretly|covertly|without\\s+(asking|confirmation|telling|the\\s+user'?s?\\s+knowledge))\\b"
+    },
+    {
+      "id": "PIJ-04",
+      "category": "prompt-injection",
+      "severity": "high",
+      "why": "Tries to disable permission prompts",
+      "pattern": "dangerously-skip-permissions|--yolo\\b|bypassPermissions|auto[-_ ]?approve|skip\\s+(all\\s+)?(permission|confirmation)s?"
+    },
+    {
+      "id": "PIJ-05",
+      "category": "prompt-injection",
+      "severity": "medium",
+      "why": "Role / system-prompt hijack phrasing",
+      "pattern": "\\byou\\s+are\\s+now\\b|\\bnew\\s+system\\s+prompt\\b|<\\s*/?\\s*system\\s*>|\\[SYSTEM\\]|developer\\s+mode|jailbreak"
+    },
+    {
+      "id": "PIJ-06",
+      "category": "prompt-injection",
+      "severity": "medium",
+      "why": "Forces an action on every invocation",
+      "pattern": "(always|must)\\s+(run|execute|install|load)\\s+[^\\n]{0,60}(before|first|at\\s+startup|every\\s+time)"
+    },
+    {
+      "id": "PIJ-07",
+      "category": "prompt-injection",
+      "severity": "medium",
+      "why": "Hidden HTML comment containing agent-directed text",
+      "pattern": "<!--[\\s\\S]{0,400}?(instruction|agent|claude|assistant|must|execute|run)[\\s\\S]{0,400}?-->"
+    },
+    {
+      "id": "PIJ-08",
+      "category": "prompt-injection",
+      "severity": "critical",
+      "why": "Text aimed at the auditor/scanner to force a clean verdict",
+      "pattern": "(mark|report|treat|classify|rate)\\s+(this\\s+)?(skill\\s+)?(as\\s+)?(safe|verified|trusted|approved|benign|pass(ed)?)\\b|(auditor|scanner|security\\s+review(er)?)s?\\s*[:,]\\s*(skip|ignore|approve)|this\\s+skill\\s+(is|has\\s+been)\\s+(pre-?)?(verified|approved|audited)"
+    },
+    {
+      "id": "SUP-01",
+      "category": "supply-chain",
+      "severity": "high",
+      "why": "Installs from git without a pinned commit/tag",
+      "pattern": "(pip3?|uv\\s+pip|pipx)\\s+install\\s+[^\\n]{0,80}git\\+https?://[^\\s@]+(\\s|$)"
+    },
+    {
+      "id": "SUP-02",
+      "category": "supply-chain",
+      "severity": "high",
+      "why": "Runs remote code directly from a URL",
+      "pattern": "\\b(uvx|npx|bunx|pnpm\\s+dlx)\\s+(-y\\s+)?(--yes\\s+)?(git\\+|https?://|github:)"
+    },
+    {
+      "id": "SUP-03",
+      "category": "supply-chain",
+      "severity": "medium",
+      "why": "Unversioned npx/uvx package execution",
+      "pattern": "\\b(npx|bunx|uvx|pnpm\\s+dlx)\\s+(-y\\s+|--yes\\s+)?(@?[a-z0-9][\\w.-]*/)?[a-z0-9][\\w.-]*(\\s|$)(?![^\\n]*@\\d)"
+    },
+    {
+      "id": "SUP-04",
+      "category": "supply-chain",
+      "severity": "medium",
+      "why": "Fetches mutable branch content at runtime",
+      "pattern": "raw\\.githubusercontent\\.com/[^\\s/]+/[^\\s/]+/(main|master|HEAD)/"
+    },
+    {
+      "id": "SUP-05",
+      "category": "supply-chain",
+      "severity": "high",
+      "why": "npm lifecycle install hook",
+      "pattern": "\\\"(pre|post)?install\\\"\\s*:|\\\"prepare\\\"\\s*:"
+    },
+    {
+      "id": "SUP-06",
+      "category": "supply-chain",
+      "severity": "medium",
+      "why": "Installs packages - verify names (typosquatting) and versions",
+      "pattern": "\\b(pip3?|npm|yarn|gem|cargo|go)\\s+(install|add|get)\\b"
+    },
+    {
+      "id": "DST-01",
+      "category": "destructive",
+      "severity": "critical",
+      "why": "Recursive delete of root or home",
+      "pattern": "rm\\s+-[a-z]*r[a-z]*f?[a-z]*\\s+(--no-preserve-root\\s+)?(/|~|\\$HOME)(\\s|/\\*|$)|shutil\\.rmtree\\(\\s*(os\\.path\\.expanduser\\(['\\\"]~|['\\\"]/['\\\"])"
+    },
+    {
+      "id": "DST-02",
+      "category": "privilege",
+      "severity": "high",
+      "why": "Privilege escalation",
+      "pattern": "\\bsudo\\b|\\bdoas\\b|runas\\s+/user"
+    },
+    {
+      "id": "DST-03",
+      "category": "privilege",
+      "severity": "medium",
+      "why": "Unsafe permissions / setuid",
+      "pattern": "chmod\\s+(-R\\s+)?(777|\\+s|u\\+s)|chown\\s+-R\\s+root"
+    },
+    {
+      "id": "DST-04",
+      "category": "evasion",
+      "severity": "medium",
+      "why": "Covers tracks or backgrounds processes",
+      "pattern": "history\\s+-c|unset\\s+HISTFILE|>\\s*/dev/null\\s+2>&1\\s*&\\s*$|nohup\\b|disown\\b"
+    }
+  ]
+}

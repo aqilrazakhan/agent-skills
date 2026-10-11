@@ -1,0 +1,12 @@
+{
+  "name": "taa-skills",
+  "version": "1.0.0",
+  "description": "Towards Agentic AI skills, including taa-skill-vetter: security-audit third-party agent skills before installing them",
+  "author": {
+    "name": "Aqil Khan",
+    "url": "https://github.com/aqilrazakhan"
+  },
+  "homepage": "https://towardsagenticai.com",
+  "repository": "https://github.com/aqilrazakhan/agent-skills",
+  "license": "MIT"
+}

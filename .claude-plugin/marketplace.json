@@ -1,0 +1,15 @@
+{
+  "name": "aqilrazakhan-agent-skills",
+  "description": "Agent skills by Aqil Khan (Towards Agentic AI)",
+  "owner": {
+    "name": "Aqil Khan",
+    "url": "https://github.com/aqilrazakhan"
+  },
+  "plugins": [
+    {
+      "name": "taa-skills",
+      "source": "./",
+      "description": "Towards Agentic AI skills, including taa-skill-vetter: security-audit third-party agent skills before installing them"
+    }
+  ]
+}
