@@ -4,7 +4,7 @@ description: Security-audit a third-party agent skill (from skills.sh, ClawHub, 
 license: MIT
 metadata:
   author: Aqil Khan (Towards Agentic AI)
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 # TAA Skill Vetter

@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.0.1 - 2026-10-11
 - Add `tests/test_hostile_fixtures.py`: inert hostile skills built in temp
   directories at test time, plus scanner robustness and CLI exit-code tests.
 - Fix `DST-01` missing `rm -rf ~/`, `$HOME/` and `~/*`.

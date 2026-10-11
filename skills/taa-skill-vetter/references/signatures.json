@@ -1,6 +1,6 @@
 {
   "_comment": "DETECTION SIGNATURES ONLY. These regexes describe malicious patterns so the scanner can find them in OTHER skills. Nothing in this file is executed; it is loaded as data by scripts/scan_skill.py.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "rules": [
     {
       "id": "RCE-01",
