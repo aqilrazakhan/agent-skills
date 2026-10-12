@@ -12,7 +12,8 @@
    `git tag -s vX.Y.Z -m "vX.Y.Z"` (signed) and push the tag.
 7. Create a GitHub release from the tag. Attach a zip of
    `skills/taa-skill-vetter/` for claude.ai uploads.
-8. Update the pinned version in README.md's Install section (the intro line,
+8. Update the pinned version in README.md's Install section and in
+   INSTALLATION.md (the intro line,
    the two `npx skills add ...#vX.Y.Z` commands, the
    `claude plugin marketplace add ...@vX.Y.Z` command and the release link)
    and merge it. Do this after the tag exists, since the snippets point at it.
