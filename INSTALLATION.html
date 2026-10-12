@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Install, use, update and uninstall steps for taa-skill-vetter v1.0.1.">
+<title>taa-skill-vetter Install Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single readable column, route picker as tabs, code blocks with copy buttons.
+   Palette: paper, ink, a deep teal accent for actions, plus pass/review/fail status hues. */
+:root {
+  color-scheme: light;
+  --bg: #f6f8f8;
+  --surface: #ffffff;
+  --fg: #14201f;
+  --muted: #566664;
+  --border: #d5dedd;
+  --accent: #0b6e69;
+  --accent-fg: #ffffff;
+  --accent-soft: #e0f0ee;
+  --code-bg: #101c1b;
+  --code-fg: #d9ece9;
+  --code-muted: #7f9b97;
+  --pass: #17794a;
+  --review: #9a6200;
+  --fail: #b3261e;
+  --font-body: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1514;
+    --surface: #131e1d;
+    --fg: #e4efed;
+    --muted: #9bb0ad;
+    --border: #28403d;
+    --accent: #4cc4bb;
+    --accent-fg: #06201e;
+    --accent-soft: #14312f;
+    --code-bg: #0a1110;
+    --code-fg: #d9ece9;
+    --code-muted: #6f8c88;
+    --pass: #5cc98d;
+    --review: #e0a93b;
+    --fail: #f2877f;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1514;
+  --surface: #131e1d;
+  --fg: #e4efed;
+  --muted: #9bb0ad;
+  --border: #28403d;
+  --accent: #4cc4bb;
+  --accent-fg: #06201e;
+  --accent-soft: #14312f;
+  --code-bg: #0a1110;
+  --code-fg: #d9ece9;
+  --code-muted: #6f8c88;
+  --pass: #5cc98d;
+  --review: #e0a93b;
+  --fail: #f2877f;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  padding-inline: 16px;
+  padding-block: 40px 64px;
+}
+.wrap { max-width: 760px; margin-inline: auto; display: flex; flex-direction: column; gap: 48px; }
+a { color: var(--accent); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+h1, h2, h3 { text-wrap: balance; line-height: 1.2; margin: 0; }
+h1 { font-size: clamp(1.9rem, 5vw, 2.6rem); font-weight: 700; letter-spacing: -0.02em; }
+h2 { font-size: 1.4rem; font-weight: 650; letter-spacing: -0.01em; }
+h3 { font-size: 1.05rem; font-weight: 600; }
+p { margin: 0; }
+code { font-family: var(--font-mono); font-size: 0.88em; background: var(--accent-soft); padding: 0.1em 0.35em; border-radius: 4px; overflow-wrap: anywhere; }
+
+header { display: flex; flex-direction: column; gap: 16px; }
+.name-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.badge { font-family: var(--font-mono); font-size: 0.8rem; background: var(--accent-soft); color: var(--accent); border: 1px solid var(--border); border-radius: 999px; padding: 2px 10px; }
+.lede { font-size: 1.1rem; color: var(--muted); max-width: 60ch; }
+.links { display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 0.95rem; }
+.verdicts { display: flex; flex-wrap: wrap; gap: 8px; }
+.verdicts span { font-family: var(--font-mono); font-size: 0.78rem; font-weight: 500; border: 1px solid currentColor; border-radius: 4px; padding: 1px 8px; }
+.v-pass { color: var(--pass); } .v-review { color: var(--review); } .v-fail { color: var(--fail); }
+.pin { border-left: 4px solid var(--accent); background: var(--surface); padding: 12px 16px; border-radius: 0 8px 8px 0; border-top: 1px solid var(--border); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+section { display: flex; flex-direction: column; gap: 16px; }
+ul.req { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 6px; }
+
+.tabs { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; }
+.tab { font: inherit; font-weight: 600; text-align: left; background: var(--surface); color: var(--fg); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; cursor: pointer; display: flex; flex-direction: column; gap: 2px; }
+.tab small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
+.tab[aria-selected="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); background: var(--accent-soft); }
+.panel { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.panel[hidden] { display: none !important; }
+.panel ol { margin: 0; padding-left: 1.3em; display: flex; flex-direction: column; gap: 12px; }
+.panel li > p { margin-bottom: 8px; }
+
+.code { position: relative; min-width: 0; }
+.code pre { margin: 0; background: var(--code-bg); color: var(--code-fg); font-family: var(--font-mono); font-size: 0.85rem; line-height: 1.55; border-radius: 8px; padding: 14px 80px 14px 16px; overflow-x: auto; }
+.code .cmt { color: var(--code-muted); }
+.copy { position: absolute; top: 8px; right: 8px; font: inherit; font-size: 0.78rem; font-weight: 600; background: transparent; color: var(--code-fg); border: 1px solid var(--code-muted); border-radius: 6px; padding: 3px 10px; cursor: pointer; }
+.copy:hover { background: rgba(255,255,255,0.08); }
+.copy.done { color: var(--pass); border-color: var(--pass); }
+.note { color: var(--muted); font-size: 0.92rem; }
+
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.cols > div { min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+details { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; }
+details + details { margin-top: -4px; }
+summary { cursor: pointer; font-weight: 600; }
+details p { margin-top: 8px; color: var(--muted); }
+footer { color: var(--muted); font-size: 0.9rem; border-top: 1px solid var(--border); padding-top: 20px; }
+@media (prefers-reduced-motion: no-preference) { .tab, .copy { transition: background-color .15s, border-color .15s; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="name-row">
+      <h1>taa-skill-vetter</h1>
+      <span class="badge">v1.0.1</span>
+    </div>
+    <p class="lede">Security-audits a third-party agent skill before you install it. It quarantines the skill, checks the publisher, runs a static scan, requires a full manual read, and returns a verdict. It never runs the code it audits.</p>
+    <div class="verdicts" aria-label="Possible verdicts"><span class="v-pass">PASS</span><span class="v-review">REVIEW</span><span class="v-fail">FAIL</span></div>
+    <div class="links">
+      <a href="https://github.com/aqilrazakhan/agent-skills">Repository</a>
+      <a href="https://github.com/aqilrazakhan/agent-skills/releases/tag/v1.0.1">Release v1.0.1</a>
+      <a href="https://github.com/aqilrazakhan/agent-skills/issues">Report an issue</a>
+    </div>
+    <p class="pin"><strong>Install a tagged release, not <code>main</code>.</strong> Pinning is the same advice the skill gives about everyone else's skills, and it means you get exactly the code that was reviewed.</p>
+  </header>
+
+  <section aria-labelledby="req">
+    <h2 id="req">Requirements</h2>
+    <ul class="req">
+      <li>An agent that supports skills: Claude Code, claude.ai, or any agent supported by the <a href="https://github.com/vercel-labs/skills">skills CLI</a>.</li>
+      <li>Python 3.9 or newer on the machine that runs the audit. The scanner uses the standard library only.</li>
+      <li><code>git</code> and network access to GitHub, so the skill can clone what it audits.</li>
+      <li>Node.js, only for the skills CLI route.</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="install">
+    <h2 id="install">Install</h2>
+    <div class="tabs" role="tablist" aria-label="Install route">
+      <button class="tab" role="tab" id="t-plugin" aria-controls="p-plugin" aria-selected="true">Claude Code plugin<small>Updates via plugins</small></button>
+      <button class="tab" role="tab" id="t-cli" aria-controls="p-cli" aria-selected="false" tabindex="-1">skills CLI<small>Any supported agent</small></button>
+      <button class="tab" role="tab" id="t-manual" aria-controls="p-manual" aria-selected="false" tabindex="-1">Manual copy<small>Read it first</small></button>
+      <button class="tab" role="tab" id="t-web" aria-controls="p-web" aria-selected="false" tabindex="-1">claude.ai<small>Upload a zip</small></button>
+    </div>
+
+    <div class="panel" role="tabpanel" id="p-plugin" aria-labelledby="t-plugin">
+      <p>Add the marketplace pinned to the tag, then install the plugin.</p>
+      <div class="code"><pre>claude plugin marketplace add aqilrazakhan/agent-skills@v1.0.1
+claude plugin install taa-skills@aqilrazakhan-agent-skills</pre><button class="copy" type="button">Copy</button></div>
+      <p>Check it with <code>claude plugin list</code>. You should see <code>taa-skills@aqilrazakhan-agent-skills</code>, version <code>1.0.1</code>, enabled. In a session, run it as <code>/taa-skills:taa-skill-vetter</code>.</p>
+    </div>
+
+    <div class="panel" role="tabpanel" id="p-cli" aria-labelledby="t-cli" hidden>
+      <p>List what the repo contains without installing anything:</p>
+      <div class="code"><pre>npx skills add aqilrazakhan/agent-skills#v1.0.1 --list</pre><button class="copy" type="button">Copy</button></div>
+      <p>Install for the agents you choose:</p>
+      <div class="code"><pre>npx skills add aqilrazakhan/agent-skills#v1.0.1 --skill taa-skill-vetter</pre><button class="copy" type="button">Copy</button></div>
+      <p>Claude Code only, available in every project:</p>
+      <div class="code"><pre>npx skills add aqilrazakhan/agent-skills#v1.0.1 --skill taa-skill-vetter -a claude-code -g</pre><button class="copy" type="button">Copy</button></div>
+      <p class="note">Check with <code>npx skills list</code>.</p>
+    </div>
+
+    <div class="panel" role="tabpanel" id="p-manual" aria-labelledby="t-manual" hidden>
+      <ol>
+        <li>
+          <p>Download the <a href="https://github.com/aqilrazakhan/agent-skills/releases/tag/v1.0.1">v1.0.1 release</a>, or clone the tag:</p>
+          <div class="code"><pre>git clone --depth 1 --branch v1.0.1 https://github.com/aqilrazakhan/agent-skills.git</pre><button class="copy" type="button">Copy</button></div>
+        </li>
+        <li><p>Read <code>skills/taa-skill-vetter/</code>. It is small: <code>SKILL.md</code>, two reference documents, a signatures file and one Python script.</p></li>
+        <li><p>Copy the folder to <code>~/.claude/skills/taa-skill-vetter/</code> for all your projects, or <code>&lt;project&gt;/.claude/skills/taa-skill-vetter/</code> for one project (preferred).</p></li>
+      </ol>
+    </div>
+
+    <div class="panel" role="tabpanel" id="p-web" aria-labelledby="t-web" hidden>
+      <ol>
+        <li><p>Zip the <code>skills/taa-skill-vetter/</code> folder. Zip the folder itself, not just its contents.</p></li>
+        <li><p>Upload the zip in claude.ai's skill settings.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section aria-labelledby="use">
+    <h2 id="use">Use it</h2>
+    <p>Ask your agent in your own words:</p>
+    <div class="code"><pre>Audit aqilrazakhan/some-repo --skill some-skill before I install it
+Vet the skill in ./downloads/cool-skill
+Re-audit every skill installed in ~/.claude/skills</pre><button class="copy" type="button">Copy</button></div>
+    <p>Each audit produces a <code>skill-audit-&lt;name&gt;-&lt;shortsha&gt;.md</code> report with the verdict, the exact commit audited, the scanner findings and how each was judged.</p>
+    <p>The scanner also runs on its own:</p>
+    <div class="code"><pre>python3 -I skills/taa-skill-vetter/scripts/scan_skill.py &lt;skill-dir&gt; --md report.md --json report.json
+<span class="cmt"># exit code: 0 PASS, 1 REVIEW, 2 FAIL</span></pre><button class="copy" type="button">Copy</button></div>
+    <p class="note">A scanner PASS is not proof of safety. The skill also requires a full manual read of every file.</p>
+  </section>
+
+  <section aria-labelledby="update">
+    <h2 id="update">Update and uninstall</h2>
+    <p>Releases are on the <a href="https://github.com/aqilrazakhan/agent-skills/releases">releases page</a>. Before moving to a new version, read the changelog and diff it like any other third-party skill, ideally by auditing it with this skill. Then repeat your install command with the new tag.</p>
+    <div class="code"><pre>git diff v1.0.1..&lt;new-tag&gt; -- skills/taa-skill-vetter</pre><button class="copy" type="button">Copy</button></div>
+    <div class="cols">
+      <div>
+        <h3>Update</h3>
+        <ul class="req">
+          <li><strong>Plugin:</strong> remove the marketplace, add it again with the new <code>@&lt;tag&gt;</code>, and reinstall.</li>
+          <li><strong>skills CLI:</strong> rerun the install with <code>#&lt;tag&gt;</code>. <code>npx skills update</code> moves to the latest version, not a tag you have reviewed.</li>
+          <li><strong>Manual or claude.ai:</strong> replace the folder with the new tagged copy.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Uninstall</h3>
+        <div class="code"><pre>claude plugin uninstall taa-skills@aqilrazakhan-agent-skills
+claude plugin marketplace remove aqilrazakhan-agent-skills</pre><button class="copy" type="button">Copy</button></div>
+        <ul class="req">
+          <li><strong>skills CLI:</strong> <code>npx skills remove taa-skill-vetter</code></li>
+          <li><strong>Manual:</strong> delete the folder you copied.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="help">
+    <h2 id="help">Troubleshooting</h2>
+    <div>
+      <details><summary>python3: command not found, or a syntax error from the scanner</summary><p>Install Python 3.9 or newer.</p></details>
+      <details><summary>The marketplace name already exists</summary><p>Claude Code allows one marketplace per name. Run <code>claude plugin marketplace remove aqilrazakhan-agent-skills</code>, then add the pinned one.</p></details>
+      <details><summary>The audit cannot clone the target</summary><p>The skill asks you to attach the folder or zip instead. Private repositories need git credentials on the machine.</p></details>
+      <details><summary>Scanner hits when scanning this skill itself</summary><p>Expected. <code>references/signatures.json</code> and <code>references/review-checklist.md</code> describe the attacks being detected, so they match their own patterns.</p></details>
+      <details><summary>A false positive or a missed attack</summary><p>Open an issue at <a href="https://github.com/aqilrazakhan/agent-skills/issues">github.com/aqilrazakhan/agent-skills/issues</a> with the pattern and, if possible, a minimal inert example.</p></details>
+    </div>
+  </section>
+
+  <footer>Free to use under the MIT license. Built by Aqil Khan, <a href="https://towardsagenticai.com">Towards Agentic AI</a>.</footer>
+</div>
+
+<script>
+(function () {
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab'));
+  function select(tab, focus) {
+    tabs.forEach(function (t) {
+      var on = t === tab;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.tabIndex = on ? 0 : -1;
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+    });
+    if (focus) tab.focus();
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener('click', function () { select(t, false); });
+    t.addEventListener('keydown', function (e) {
+      var n = null;
+      if (e.key === 'ArrowRight') n = tabs[(i + 1) % tabs.length];
+      if (e.key === 'ArrowLeft') n = tabs[(i - 1 + tabs.length) % tabs.length];
+      if (e.key === 'Home') n = tabs[0];
+      if (e.key === 'End') n = tabs[tabs.length - 1];
+      if (n) { e.preventDefault(); select(n, true); }
+    });
+  });
+
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+    return ok;
+  }
+  function flash(btn, label, ok) {
+    btn.textContent = label;
+    btn.classList.toggle('done', ok);
+    setTimeout(function () { btn.textContent = 'Copy'; btn.classList.remove('done'); }, 1600);
+  }
+  document.querySelectorAll('.copy').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var pre = btn.parentNode.querySelector('pre');
+      var text = pre.innerText.replace(/\n+$/, '');
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(
+          function () { flash(btn, 'Copied', true); },
+          function () { var ok = fallbackCopy(text); flash(btn, ok ? 'Copied' : 'Select text', ok); }
+        );
+      } else {
+        var ok = fallbackCopy(text);
+        flash(btn, ok ? 'Copied' : 'Select text', ok);
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>
