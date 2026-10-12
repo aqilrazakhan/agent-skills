@@ -20,7 +20,8 @@ by the [`skills` CLI](https://github.com/vercel-labs/skills) / [skills.sh](https
 Pin to a release tag (currently `v1.0.1`). Don't track `main`, which is the
 same advice this repo's skill gives about everyone else's skills.
 
-Full steps, update and uninstall instructions: [INSTALLATION.md](INSTALLATION.md).
+Full steps, update and uninstall instructions: [INSTALLATION.md](INSTALLATION.md)
+or the [install guide web page](https://aqilrazakhan.github.io/agent-skills/).
 
 **Any agent (skills.sh CLI)**
 ```bash
