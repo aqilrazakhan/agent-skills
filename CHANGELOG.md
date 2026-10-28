@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.2 - 2026-10-28
+- Add "Third-party content handling" section to `SKILL.md` to mitigate
+  Snyk W011 (indirect prompt injection via audited third-party content).
+  Residual risk is inherent to the skill's purpose and documented.
+
 ## 1.0.1 - 2026-10-11
 - Add `tests/test_hostile_fixtures.py`: inert hostile skills built in temp
   directories at test time, plus scanner robustness and CLI exit-code tests.
